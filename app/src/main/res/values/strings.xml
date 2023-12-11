@@ -5,4 +5,7 @@
     <string name="login">Login</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
+    <string name="registration">Registration</string>
+    <string name="back">Back</string>
+    <string name="repeat_password">Repeat password</string>
 </resources>

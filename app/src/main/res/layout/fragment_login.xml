@@ -37,4 +37,16 @@
         android:layout_margin="10dp"
         android:text="@string/login" />
 
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvGoToReg"
+        android:text="@string/registration"
+        android:textSize="30sp"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:layout_marginTop="10dp"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
 </androidx.appcompat.widget.LinearLayoutCompat>
