@@ -16,6 +16,7 @@ import com.example.apiloginreg.auth.AuthViewModel
 import com.example.apiloginreg.auth.AuthViewModelFactory
 import com.example.apiloginreg.base.BaseFragment
 import com.example.apiloginreg.databinding.FragmentLoginBinding
+import com.example.apiloginreg.token.TokenManager
 import kotlinx.coroutines.launch
 
 
@@ -34,11 +35,10 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
 
 
             btnLogin.setOnClickListener {
-                if (isValidEmail(edEmail.text.toString())){
+                if (isValidEmail(edEmail.text.toString())) {
                     authViewModel.loginUser(edEmail.text.toString(), edPass.text.toString())
-                }else {
-                    Toast.makeText(requireContext(), "wrong email", Toast.LENGTH_SHORT)
-                        .show()
+                } else {
+                    Toast.makeText(requireContext(), "wrong email", Toast.LENGTH_SHORT).show()
                 }
 
             }
@@ -53,6 +53,8 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
                 findNavController().navigate(
                     R.id.action_loginFragment_to_homeFragment
                 )
+            } else {
+                TokenManager(requireContext()).clearEmail()
             }
         }
     }
@@ -63,19 +65,23 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
 
     private fun observe() {
         viewLifecycleOwner.lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
+            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 authViewModel.loginResult.collect { result ->
                     result?.let {
                         when (result) {
                             is AuthResult.Success -> {
                                 // Success login
                                 val token = result.token
-                                TokenManager(requireContext()).saveToken(token)
+                                if (binding.checkbox.isChecked) {
+                                    TokenManager(requireContext()).saveToken(token)
+                                }
+                                TokenManager(requireContext()).saveEmail(binding.edEmail.text.toString())
                                 Toast.makeText(requireContext(), token, Toast.LENGTH_SHORT).show()
                                 findNavController().navigate(
                                     R.id.action_loginFragment_to_homeFragment
                                 )
                             }
+
                             is AuthResult.Error -> {
                                 // Error message
                                 val errorMessage = result.errorMessage

@@ -1,4 +1,4 @@
-package com.example.apiloginreg.login
+package com.example.apiloginreg.token
 
 import android.content.Context
 import androidx.security.crypto.EncryptedSharedPreferences
@@ -18,6 +18,7 @@ class TokenManager(context: Context) {
 
     companion object {
         private const val KEY_TOKEN = "token_key"
+        private const val KEY_EMAIL = "email_key"
     }
 
     fun saveToken(token: String) {
@@ -30,5 +31,17 @@ class TokenManager(context: Context) {
 
     fun clearToken() {
         sharedPreferences.edit().remove(KEY_TOKEN).apply()
+    }
+
+    fun saveEmail(email: String) {
+        sharedPreferences.edit().putString(KEY_EMAIL, email).apply()
+    }
+
+    fun getEmail(): String? {
+        return sharedPreferences.getString(KEY_EMAIL, null)
+    }
+
+    fun clearEmail() {
+        sharedPreferences.edit().remove(KEY_EMAIL).apply()
     }
 }

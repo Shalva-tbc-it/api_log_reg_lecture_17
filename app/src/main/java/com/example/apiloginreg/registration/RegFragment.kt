@@ -1,11 +1,16 @@
 package com.example.apiloginreg.registration
 
+import android.graphics.Color
 import android.util.Log
 import android.widget.Toast
+import androidx.core.content.ContextCompat
+import androidx.core.widget.addTextChangedListener
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import com.example.apiloginreg.R
 import com.example.apiloginreg.api.RetrofitInstance
 import com.example.apiloginreg.auth.AuthRepository
@@ -22,8 +27,11 @@ class RegFragment : BaseFragment<FragmentRegBinding>(FragmentRegBinding::inflate
         AuthViewModelFactory(AuthRepository(RetrofitInstance.apiService))
     }
 
+    private var currentPass: Boolean = false
+
     override fun start() {
         observe()
+        checkPass()
     }
 
     override fun clickListener() {
@@ -31,7 +39,11 @@ class RegFragment : BaseFragment<FragmentRegBinding>(FragmentRegBinding::inflate
         binding.apply {
 
             btnReg.setOnClickListener {
-                authViewModel.registerUser(edEmail.text.toString(), edPass.text.toString())
+                if (currentPass) {
+                    authViewModel.registerUser(edEmail.text.toString(), edPass.text.toString())
+                } else {
+                    Toast.makeText(requireContext(), "check pass", Toast.LENGTH_SHORT).show()
+                }
             }
 
             tvGoToLog.setOnClickListener {
@@ -39,6 +51,15 @@ class RegFragment : BaseFragment<FragmentRegBinding>(FragmentRegBinding::inflate
             }
         }
 
+    }
+
+    private fun checkPass() = with(binding) {
+        edPass.doAfterTextChanged {
+            checkPasswordsMatch()
+        }
+        edRepeatPass.doAfterTextChanged {
+            checkPasswordsMatch()
+        }
     }
 
     private fun observe() {
@@ -50,8 +71,13 @@ class RegFragment : BaseFragment<FragmentRegBinding>(FragmentRegBinding::inflate
                             is AuthResult.Success -> {
                                 // Success registration
                                 val token = result.token
-                                Toast.makeText(requireContext(), "$token", Toast.LENGTH_SHORT).show()
+                                findNavController().navigate(
+                                    R.id.action_regFragment_to_loginFragment
+                                )
+                                Toast.makeText(requireContext(), "$token", Toast.LENGTH_SHORT)
+                                    .show()
                             }
+
                             is AuthResult.Error -> {
                                 // Error message
                                 val errorMessage = result.errorMessage
@@ -63,6 +89,26 @@ class RegFragment : BaseFragment<FragmentRegBinding>(FragmentRegBinding::inflate
                     }
                 }
             }
+        }
+    }
+
+    private fun checkPasswordsMatch() = with(binding) {
+        if (edPass.text.toString() == edRepeatPass.text.toString()) {
+            edPass.setTextColor(ContextCompat.getColor(requireContext(), R.color.passwordMatch))
+            edRepeatPass.setTextColor(
+                ContextCompat.getColor(
+                    requireContext(), R.color.passwordMatch
+                )
+            )
+            currentPass = true
+        } else {
+            edPass.setTextColor(ContextCompat.getColor(requireContext(), R.color.passwordMismatch))
+            edRepeatPass.setTextColor(
+                ContextCompat.getColor(
+                    requireContext(), R.color.passwordMismatch
+                )
+            )
+            currentPass = false
         }
     }
 }
