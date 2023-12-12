@@ -1,5 +1,6 @@
-package com.example.apiloginreg.api
+package com.example.apiloginreg.auth
 
+import com.example.apiloginreg.api.ApiService
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import org.json.JSONException
@@ -33,7 +34,7 @@ class AuthRepository(private val apiService: ApiService) {
                     emit(AuthResult.Error("Login failed: ${response.code()}"))
                 }
             }
-        } catch (e: Exception) {
+        } catch (e: Throwable) {
             emit(AuthResult.Error("Login failed: ${e.message}"))
         }
     }

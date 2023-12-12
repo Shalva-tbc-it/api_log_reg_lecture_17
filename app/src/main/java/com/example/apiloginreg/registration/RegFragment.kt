@@ -6,11 +6,12 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.example.apiloginreg.api.AuthRepository
-import com.example.apiloginreg.api.AuthResult
-import com.example.apiloginreg.api.AuthViewModel
-import com.example.apiloginreg.api.AuthViewModelFactory
+import com.example.apiloginreg.R
 import com.example.apiloginreg.api.RetrofitInstance
+import com.example.apiloginreg.auth.AuthRepository
+import com.example.apiloginreg.auth.AuthResult
+import com.example.apiloginreg.auth.AuthViewModel
+import com.example.apiloginreg.auth.AuthViewModelFactory
 import com.example.apiloginreg.base.BaseFragment
 import com.example.apiloginreg.databinding.FragmentRegBinding
 import kotlinx.coroutines.launch
@@ -29,12 +30,13 @@ class RegFragment : BaseFragment<FragmentRegBinding>(FragmentRegBinding::inflate
 
         binding.apply {
 
-            btnLogin.setOnClickListener {
+            btnReg.setOnClickListener {
                 authViewModel.registerUser(edEmail.text.toString(), edPass.text.toString())
-
-
             }
 
+            tvGoToLog.setOnClickListener {
+                R.id.action_regFragment_to_loginFragment
+            }
         }
 
     }
@@ -42,23 +44,23 @@ class RegFragment : BaseFragment<FragmentRegBinding>(FragmentRegBinding::inflate
     private fun observe() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-            authViewModel.registerResult.collect { result ->
-                result?.let {
-                    when (result) {
-                        is AuthResult.Success -> {
-                            // Success registration
-                            val token = result.token
-                            Toast.makeText(requireContext(), token, Toast.LENGTH_SHORT).show()
-                        }
-                        is AuthResult.Error -> {
-                            // Error message
-                            val errorMessage = result.errorMessage
-                            Log.e("errorLoginError", "$errorMessage")
-                            Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT)
-                                .show()
+                authViewModel.registerResult.collect { result ->
+                    result?.let {
+                        when (result) {
+                            is AuthResult.Success -> {
+                                // Success registration
+                                val token = result.token
+                                Toast.makeText(requireContext(), "$token", Toast.LENGTH_SHORT).show()
+                            }
+                            is AuthResult.Error -> {
+                                // Error message
+                                val errorMessage = result.errorMessage
+                                Log.e("errorLoginError", "$errorMessage")
+                                Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT)
+                                    .show()
+                            }
                         }
                     }
-                }
                 }
             }
         }

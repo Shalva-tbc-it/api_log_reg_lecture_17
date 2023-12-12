@@ -1,7 +1,7 @@
 package com.example.apiloginreg.login
 
-import android.os.Bundle
-import android.util.Log
+import android.text.TextUtils
+import android.util.Patterns
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -9,11 +9,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.example.apiloginreg.R
-import com.example.apiloginreg.api.AuthRepository
-import com.example.apiloginreg.api.AuthResult
-import com.example.apiloginreg.api.AuthViewModel
-import com.example.apiloginreg.api.AuthViewModelFactory
 import com.example.apiloginreg.api.RetrofitInstance
+import com.example.apiloginreg.auth.AuthRepository
+import com.example.apiloginreg.auth.AuthResult
+import com.example.apiloginreg.auth.AuthViewModel
+import com.example.apiloginreg.auth.AuthViewModelFactory
 import com.example.apiloginreg.base.BaseFragment
 import com.example.apiloginreg.databinding.FragmentLoginBinding
 import kotlinx.coroutines.launch
@@ -25,11 +25,6 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
         AuthViewModelFactory(AuthRepository(RetrofitInstance.apiService))
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
-
     override fun start() {
         observe()
     }
@@ -37,8 +32,15 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
     override fun clickListener() {
         binding.apply {
 
+
             btnLogin.setOnClickListener {
-                authViewModel.loginUser(edEmail.text.toString(), edPass.text.toString())
+                if (isValidEmail(edEmail.text.toString())){
+                    authViewModel.loginUser(edEmail.text.toString(), edPass.text.toString())
+                }else {
+                    Toast.makeText(requireContext(), "wrong email", Toast.LENGTH_SHORT)
+                        .show()
+                }
+
             }
 
             tvGoToReg.setOnClickListener {
@@ -55,10 +57,9 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
         }
     }
 
-//    private fun isValidEmail(email: String): Boolean {
-//        val regex = Regex("eve\\.holt@reqres\\.in", RegexOption.IGNORE_CASE)
-//        return regex.matches(email)
-//    }
+    private fun isValidEmail(target: CharSequence?): Boolean {
+        return !TextUtils.isEmpty(target) && Patterns.EMAIL_ADDRESS.matcher(target).matches()
+    }
 
     private fun observe() {
         viewLifecycleOwner.lifecycleScope.launch {
@@ -78,13 +79,8 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
                             is AuthResult.Error -> {
                                 // Error message
                                 val errorMessage = result.errorMessage
-                                Log.e("errorLoginError", "$errorMessage")
                                 Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT)
                                     .show()
-                            }
-                            else -> {
-                                Toast.makeText(requireContext(), "else", Toast.LENGTH_SHORT)
-                                .show()
                             }
                         }
                     }

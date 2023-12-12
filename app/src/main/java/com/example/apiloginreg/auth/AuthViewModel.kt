@@ -1,4 +1,4 @@
-package com.example.apiloginreg.api
+package com.example.apiloginreg.auth
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

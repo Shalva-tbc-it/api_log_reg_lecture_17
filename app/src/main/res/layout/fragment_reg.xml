@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="10dp"
-        android:text="@string/login"
+        android:text="@string/registration"
         android:textSize="40sp" />
 
     <androidx.appcompat.widget.AppCompatEditText
@@ -39,15 +39,15 @@
         android:padding="10dp" />
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btnLogin"
+        android:id="@+id/btnReg"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:text="@string/login" />
+        android:text="@string/registration" />
 
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/tvGoToReg"
+        android:id="@+id/tvGoToLog"
         android:text="@string/back"
         android:textSize="30sp"
         android:textColor="@color/black"
