@@ -22,7 +22,7 @@ class RegFragment : BaseFragment<FragmentRegBinding>(FragmentRegBinding::inflate
     }
 
     override fun start() {
-
+        observe()
     }
 
     override fun clickListener() {
@@ -31,7 +31,8 @@ class RegFragment : BaseFragment<FragmentRegBinding>(FragmentRegBinding::inflate
 
             btnLogin.setOnClickListener {
                 authViewModel.registerUser(edEmail.text.toString(), edPass.text.toString())
-                observe()
+
+
             }
 
         }
@@ -45,12 +46,9 @@ class RegFragment : BaseFragment<FragmentRegBinding>(FragmentRegBinding::inflate
                 result?.let {
                     when (result) {
                         is AuthResult.Success -> {
-                            // Success login
+                            // Success registration
                             val token = result.token
                             Toast.makeText(requireContext(), token, Toast.LENGTH_SHORT).show()
-//                            findNavController().navigate(
-//                                R.id.action_loginFragment_to_homeFragment
-//                            )
                         }
                         is AuthResult.Error -> {
                             // Error message

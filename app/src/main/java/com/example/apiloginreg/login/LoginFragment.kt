@@ -1,5 +1,6 @@
 package com.example.apiloginreg.login
 
+import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.fragment.app.viewModels
@@ -17,14 +18,20 @@ import com.example.apiloginreg.base.BaseFragment
 import com.example.apiloginreg.databinding.FragmentLoginBinding
 import kotlinx.coroutines.launch
 
+
 class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::inflate) {
 
     private val authViewModel: AuthViewModel by viewModels {
         AuthViewModelFactory(AuthRepository(RetrofitInstance.apiService))
     }
 
-    override fun start() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
 
+    }
+
+    override fun start() {
+        observe()
     }
 
     override fun clickListener() {
@@ -32,12 +39,17 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
 
             btnLogin.setOnClickListener {
                 authViewModel.loginUser(edEmail.text.toString(), edPass.text.toString())
-                observe()
             }
 
             tvGoToReg.setOnClickListener {
                 findNavController().navigate(
                     R.id.action_loginFragment_to_regFragment
+                )
+            }
+
+            if (!TokenManager(requireContext()).getToken().isNullOrEmpty()) {
+                findNavController().navigate(
+                    R.id.action_loginFragment_to_homeFragment
                 )
             }
         }
@@ -57,10 +69,11 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
                             is AuthResult.Success -> {
                                 // Success login
                                 val token = result.token
+                                TokenManager(requireContext()).saveToken(token)
                                 Toast.makeText(requireContext(), token, Toast.LENGTH_SHORT).show()
-//                                findNavController().navigate(
-//                                    R.id.action_loginFragment_to_homeFragment
-//                                )
+                                findNavController().navigate(
+                                    R.id.action_loginFragment_to_homeFragment
+                                )
                             }
                             is AuthResult.Error -> {
                                 // Error message
@@ -69,7 +82,6 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
                                 Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT)
                                     .show()
                             }
-
                             else -> {
                                 Toast.makeText(requireContext(), "else", Toast.LENGTH_SHORT)
                                 .show()

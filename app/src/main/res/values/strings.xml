@@ -8,4 +8,5 @@
     <string name="registration">Registration</string>
     <string name="back">Back</string>
     <string name="repeat_password">Repeat password</string>
+    <string name="log_out">Log Out</string>
 </resources>
