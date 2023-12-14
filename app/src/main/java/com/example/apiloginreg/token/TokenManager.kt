@@ -1,47 +1,50 @@
 package com.example.apiloginreg.token
 
 import android.content.Context
-import androidx.security.crypto.EncryptedSharedPreferences
-import androidx.security.crypto.MasterKey
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.emptyPreferences
+import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.datastore.preferences.preferencesDataStore
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.map
+import java.io.IOException
 
-class TokenManager(context: Context) {
+private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "user_preferences")
 
-    private val sharedPreferences = EncryptedSharedPreferences.create(
-        context,
-        "encrypted_prefs_file", // file name
-        MasterKey.Builder(context)
-            .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
-            .build(),
-        EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
-        EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
-    )
+class TokenManager(context: Context){
 
     companion object {
-        private const val KEY_TOKEN = "token_key"
-        private const val KEY_EMAIL = "email_key"
+        private val TOKEN_KEY = stringPreferencesKey("token_key")
     }
 
-    fun saveToken(token: String) {
-        sharedPreferences.edit().putString(KEY_TOKEN, token).apply()
+    private val dataStore = context.dataStore
+
+    suspend fun saveToken(token: String) {
+        dataStore.edit { preferences ->
+            preferences[TOKEN_KEY] = token
+        }
     }
 
-    fun getToken(): String? {
-        return sharedPreferences.getString(KEY_TOKEN, null)
+    suspend fun clearToken() {
+        dataStore.edit { preferences ->
+            preferences.remove(TOKEN_KEY)
+        }
     }
 
-    fun clearToken() {
-        sharedPreferences.edit().remove(KEY_TOKEN).apply()
-    }
 
-    fun saveEmail(email: String) {
-        sharedPreferences.edit().putString(KEY_EMAIL, email).apply()
-    }
 
-    fun getEmail(): String? {
-        return sharedPreferences.getString(KEY_EMAIL, null)
-    }
-
-    fun clearEmail() {
-        sharedPreferences.edit().remove(KEY_EMAIL).apply()
-    }
+    val getToken: Flow<String?> = dataStore.data
+        .catch { exception ->
+            if (exception is IOException) {
+                emit(emptyPreferences())
+            } else {
+                throw exception
+            }
+        }
+        .map { users ->
+            users[TOKEN_KEY] ?: ""
+        }
 }

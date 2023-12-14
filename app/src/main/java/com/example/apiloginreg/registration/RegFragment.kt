@@ -1,10 +1,8 @@
 package com.example.apiloginreg.registration
 
-import android.graphics.Color
 import android.util.Log
 import android.widget.Toast
 import androidx.core.content.ContextCompat
-import androidx.core.widget.addTextChangedListener
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -72,7 +70,7 @@ class RegFragment : BaseFragment<FragmentRegBinding>(FragmentRegBinding::inflate
                                 // Success registration
                                 val token = result.token
                                 findNavController().navigate(
-                                    R.id.action_regFragment_to_loginFragment
+                                    RegFragmentDirections.actionRegFragmentToLoginFragment()
                                 )
                                 Toast.makeText(requireContext(), "$token", Toast.LENGTH_SHORT)
                                     .show()

@@ -8,7 +8,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
-import com.example.apiloginreg.R
 import com.example.apiloginreg.api.RetrofitInstance
 import com.example.apiloginreg.auth.AuthRepository
 import com.example.apiloginreg.auth.AuthResult
@@ -33,28 +32,34 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
     override fun clickListener() {
         binding.apply {
 
-
             btnLogin.setOnClickListener {
                 if (isValidEmail(edEmail.text.toString())) {
                     authViewModel.loginUser(edEmail.text.toString(), edPass.text.toString())
                 } else {
                     Toast.makeText(requireContext(), "wrong email", Toast.LENGTH_SHORT).show()
                 }
-
             }
 
             tvGoToReg.setOnClickListener {
                 findNavController().navigate(
-                    R.id.action_loginFragment_to_regFragment
+                    LoginFragmentDirections.actionLoginFragmentToRegFragment()
                 )
             }
-
-            if (!TokenManager(requireContext()).getToken().isNullOrEmpty()) {
-                findNavController().navigate(
-                    R.id.action_loginFragment_to_homeFragment
-                )
-            } else {
-                TokenManager(requireContext()).clearEmail()
+            viewLifecycleOwner.lifecycleScope.launch {
+                repeatOnLifecycle(Lifecycle.State.STARTED) {
+                    TokenManager(requireContext()).getToken.collect {
+                        if (!it.isNullOrEmpty()) {
+                            findNavController().navigate(
+                                LoginFragmentDirections.actionLoginFragmentToHomeFragment()
+                            )
+                        }
+                    }
+                }
+            }
+            viewLifecycleOwner.lifecycleScope.launch {
+                repeatOnLifecycle(Lifecycle.State.STARTED) {
+                    //email
+                }
             }
         }
     }
@@ -73,12 +78,12 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
                                 // Success login
                                 val token = result.token
                                 if (binding.checkbox.isChecked) {
-                                    TokenManager(requireContext()).saveToken(token)
+                                    viewLifecycleOwner.lifecycleScope.launch {
+                                        TokenManager(requireContext()).saveToken(token)
+                                    }
                                 }
-                                TokenManager(requireContext()).saveEmail(binding.edEmail.text.toString())
-                                Toast.makeText(requireContext(), token, Toast.LENGTH_SHORT).show()
                                 findNavController().navigate(
-                                    R.id.action_loginFragment_to_homeFragment
+                                    LoginFragmentDirections.actionLoginFragmentToHomeFragment()
                                 )
                             }
 
