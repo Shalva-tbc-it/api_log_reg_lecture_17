@@ -25,6 +25,7 @@ object RetrofitInstance {
     private val moshi = Moshi.Builder() // adapter
         .add(KotlinJsonAdapterFactory())
         .build()
+
     private val retrofit = Retrofit.Builder()
         .addConverterFactory(MoshiConverterFactory.create(moshi))
         .baseUrl(BASE_URL)

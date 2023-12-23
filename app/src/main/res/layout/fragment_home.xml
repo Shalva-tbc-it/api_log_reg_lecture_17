@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical"
-    tools:context=".home.HomeFragment">
+    tools:context=".presentation.home.HomeFragment">
 
 
     <androidx.appcompat.widget.AppCompatTextView

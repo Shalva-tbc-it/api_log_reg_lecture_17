@@ -1,4 +1,4 @@
-package com.example.apiloginreg.base
+package com.example.apiloginreg.presentation
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -36,5 +36,4 @@ abstract class BaseFragment<VB: ViewBinding>(private val inflate: Inflater<VB>) 
         super.onDestroyView()
         _binding = null
     }
-
 }

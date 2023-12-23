@@ -1,4 +1,4 @@
-package com.example.apiloginreg.login
+package com.example.apiloginreg.presentation.log_in
 
 import android.text.TextUtils
 import android.util.Patterns
@@ -8,22 +8,18 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
-import com.example.apiloginreg.api.RetrofitInstance
-import com.example.apiloginreg.auth.AuthRepository
 import com.example.apiloginreg.auth.AuthResult
-import com.example.apiloginreg.auth.AuthViewModel
-import com.example.apiloginreg.auth.AuthViewModelFactory
-import com.example.apiloginreg.base.BaseFragment
 import com.example.apiloginreg.databinding.FragmentLoginBinding
+import com.example.apiloginreg.presentation.BaseFragment
 import com.example.apiloginreg.token.TokenManager
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 
+@AndroidEntryPoint
 class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::inflate) {
 
-    private val authViewModel: AuthViewModel by viewModels {
-        AuthViewModelFactory(AuthRepository(RetrofitInstance.apiService))
-    }
+    private val logInViewModel: LogInViewModel by viewModels()
 
     override fun start() {
         observe()
@@ -31,10 +27,9 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
 
     override fun clickListener() {
         binding.apply {
-
             btnLogin.setOnClickListener {
                 if (isValidEmail(edEmail.text.toString())) {
-                    authViewModel.loginUser(edEmail.text.toString(), edPass.text.toString())
+                    logInViewModel.loginUser(edEmail.text.toString(), edPass.text.toString())
                 } else {
                     Toast.makeText(requireContext(), "wrong email", Toast.LENGTH_SHORT).show()
                 }
@@ -71,7 +66,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
     private fun observe() {
         viewLifecycleOwner.lifecycleScope.launch {
             lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                authViewModel.loginResult.collect { result ->
+                logInViewModel.loginResult.collect { result ->
                     result?.let {
                         when (result) {
                             is AuthResult.Success -> {
@@ -86,7 +81,6 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
                                     LoginFragmentDirections.actionLoginFragmentToHomeFragment()
                                 )
                             }
-
                             is AuthResult.Error -> {
                                 // Error message
                                 val errorMessage = result.errorMessage

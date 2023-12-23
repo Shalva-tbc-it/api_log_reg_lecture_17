@@ -1,10 +1,10 @@
-package com.example.apiloginreg.home
+package com.example.apiloginreg.presentation.home
 
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
-import com.example.apiloginreg.base.BaseFragment
+import com.example.apiloginreg.presentation.BaseFragment
 import com.example.apiloginreg.databinding.FragmentHomeBinding
 import com.example.apiloginreg.token.TokenManager
 import kotlinx.coroutines.launch

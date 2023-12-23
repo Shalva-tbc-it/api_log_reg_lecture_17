@@ -1,7 +1,9 @@
-package com.example.apiloginreg.token
+package com.example.apiloginreg.app
 
 import android.app.Application
+import dagger.hilt.android.HiltAndroidApp
 
+@HiltAndroidApp
 class App: Application() {
 
     companion object {

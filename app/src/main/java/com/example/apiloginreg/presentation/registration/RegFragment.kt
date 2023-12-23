@@ -1,4 +1,4 @@
-package com.example.apiloginreg.registration
+package com.example.apiloginreg.presentation.registration
 
 import android.util.Log
 import android.widget.Toast
@@ -15,9 +15,10 @@ import com.example.apiloginreg.auth.AuthRepository
 import com.example.apiloginreg.auth.AuthResult
 import com.example.apiloginreg.auth.AuthViewModel
 import com.example.apiloginreg.auth.AuthViewModelFactory
-import com.example.apiloginreg.base.BaseFragment
 import com.example.apiloginreg.databinding.FragmentRegBinding
+import com.example.apiloginreg.presentation.BaseFragment
 import kotlinx.coroutines.launch
+
 
 class RegFragment : BaseFragment<FragmentRegBinding>(FragmentRegBinding::inflate) {
 

@@ -6,7 +6,7 @@
     app:startDestination="@id/loginFragment">
     <fragment
         android:id="@+id/loginFragment"
-        android:name="com.example.apiloginreg.login.LoginFragment"
+        android:name="com.example.apiloginreg.presentation.log_in.LoginFragment"
         android:label="fragment_login"
         tools:layout="@layout/fragment_login" >
         <action
@@ -20,7 +20,7 @@
     </fragment>
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.example.apiloginreg.home.HomeFragment"
+        android:name="com.example.apiloginreg.presentation.home.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" >
         <action
@@ -31,7 +31,7 @@
     </fragment>
     <fragment
         android:id="@+id/regFragment"
-        android:name="com.example.apiloginreg.registration.RegFragment"
+        android:name="com.example.apiloginreg.presentation.registration.RegFragment"
         android:label="fragment_reg"
         tools:layout="@layout/fragment_reg" >
         <action
