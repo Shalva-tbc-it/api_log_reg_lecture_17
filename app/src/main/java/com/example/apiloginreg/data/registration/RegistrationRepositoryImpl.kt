@@ -1,7 +1,6 @@
 package com.example.apiloginreg.data.registration
 
-import com.example.apiloginreg.auth.AuthResult
-import com.example.apiloginreg.auth.RegisterRequest
+import com.example.apiloginreg.data_store.AuthResult
 import com.example.apiloginreg.domain.RegistrationRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -14,7 +13,7 @@ class RegistrationRepositoryImpl @Inject constructor(private val registrationSer
     override suspend fun registerUser(email: String, password: String): Flow<AuthResult> {
        return flow {
            try {
-               val response = registrationService.registerUser(RegisterRequest(email, password))
+               val response = registrationService.registerUser(RegistrationDTO(email, password))
                if (response.isSuccessful) {
                    val token = response.body()?.token
                    if (token != null) {

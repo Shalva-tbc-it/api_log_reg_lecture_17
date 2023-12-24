@@ -1,7 +1,6 @@
 package com.example.apiloginreg.data.registration
 
-import com.example.apiloginreg.auth.ApiResponse
-import com.example.apiloginreg.auth.RegisterRequest
+import com.example.apiloginreg.data_store.ApiResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.POST
@@ -9,5 +8,5 @@ import retrofit2.http.POST
 interface RegistrationService {
 
     @POST("register")
-    suspend fun registerUser(@Body request: RegisterRequest): Response<ApiResponse>
+    suspend fun registerUser(@Body request: RegistrationDTO): Response<ApiResponse>
 }

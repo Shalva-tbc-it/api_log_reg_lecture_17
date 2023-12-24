@@ -10,9 +10,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.example.apiloginreg.R
-import com.example.apiloginreg.auth.AuthResult
+import com.example.apiloginreg.data_store.AuthResult
 import com.example.apiloginreg.databinding.FragmentRegBinding
-import com.example.apiloginreg.presentation.BaseFragment
+import com.example.apiloginreg.presentation.base.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 

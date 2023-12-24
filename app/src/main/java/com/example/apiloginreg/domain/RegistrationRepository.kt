@@ -1,6 +1,6 @@
 package com.example.apiloginreg.domain
 
-import com.example.apiloginreg.auth.AuthResult
+import com.example.apiloginreg.data_store.AuthResult
 import kotlinx.coroutines.flow.Flow
 import retrofit2.http.POST
 

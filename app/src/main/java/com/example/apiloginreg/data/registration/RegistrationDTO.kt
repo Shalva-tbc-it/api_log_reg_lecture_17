@@ -1,4 +1,6 @@
 package com.example.apiloginreg.data.registration
 
-class RegistrationDTO {
-}
+data class RegistrationDTO(
+    val email: String,
+    val password: String
+)

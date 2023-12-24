@@ -1,4 +1,4 @@
-package com.example.apiloginreg.auth
+package com.example.apiloginreg.data_store
 
 sealed class AuthResult {
     data class Success(val token: String) : AuthResult()

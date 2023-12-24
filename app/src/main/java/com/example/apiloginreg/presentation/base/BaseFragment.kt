@@ -1,4 +1,4 @@
-package com.example.apiloginreg.presentation
+package com.example.apiloginreg.presentation.base
 
 import android.os.Bundle
 import android.view.LayoutInflater

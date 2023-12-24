@@ -1,7 +1,6 @@
 package com.example.apiloginreg.data.log_in
 
-import com.example.apiloginreg.auth.AuthResult
-import com.example.apiloginreg.auth.LoginRequest
+import com.example.apiloginreg.data_store.AuthResult
 import com.example.apiloginreg.domain.LogInRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -13,7 +12,7 @@ class LogInRepositoryImpl @Inject constructor(val logInService: LogInService) : 
 
     override suspend fun loginUser(email: String, password: String): Flow<AuthResult> = flow {
         try {
-            val response = logInService.loginUser(LoginRequest(email, password))
+            val response = logInService.loginUser(LogInDTO(email, password))
             if (response.isSuccessful) {
                 val token = response.body()?.token
                 if (token != null) {
