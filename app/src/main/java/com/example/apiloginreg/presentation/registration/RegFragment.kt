@@ -10,21 +10,17 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.example.apiloginreg.R
-import com.example.apiloginreg.api.RetrofitInstance
-import com.example.apiloginreg.auth.AuthRepository
 import com.example.apiloginreg.auth.AuthResult
-import com.example.apiloginreg.auth.AuthViewModel
-import com.example.apiloginreg.auth.AuthViewModelFactory
 import com.example.apiloginreg.databinding.FragmentRegBinding
 import com.example.apiloginreg.presentation.BaseFragment
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 
+@AndroidEntryPoint
 class RegFragment : BaseFragment<FragmentRegBinding>(FragmentRegBinding::inflate) {
 
-    private val authViewModel: AuthViewModel by viewModels {
-        AuthViewModelFactory(AuthRepository(RetrofitInstance.apiService))
-    }
+    private val regViewModel: RegistrationViewModel by viewModels()
 
     private var currentPass: Boolean = false
 
@@ -39,14 +35,16 @@ class RegFragment : BaseFragment<FragmentRegBinding>(FragmentRegBinding::inflate
 
             btnReg.setOnClickListener {
                 if (currentPass) {
-                    authViewModel.registerUser(edEmail.text.toString(), edPass.text.toString())
+                    regViewModel.registerUser(edEmail.text.toString(), edPass.text.toString())
                 } else {
                     Toast.makeText(requireContext(), "check pass", Toast.LENGTH_SHORT).show()
                 }
             }
 
             tvGoToLog.setOnClickListener {
-                R.id.action_regFragment_to_loginFragment
+                findNavController().navigate(
+                    RegFragmentDirections.actionRegFragmentToLoginFragment()
+                )
             }
         }
 
@@ -64,7 +62,7 @@ class RegFragment : BaseFragment<FragmentRegBinding>(FragmentRegBinding::inflate
     private fun observe() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                authViewModel.registerResult.collect { result ->
+                regViewModel.registerResult.collect { result ->
                     result?.let {
                         when (result) {
                             is AuthResult.Success -> {

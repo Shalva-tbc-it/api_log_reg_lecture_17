@@ -1,6 +1,7 @@
 package com.example.apiloginreg.di
 
 import com.example.apiloginreg.data.log_in.LogInService
+import com.example.apiloginreg.data.registration.RegistrationService
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
@@ -18,7 +19,6 @@ import javax.inject.Singleton
 object AppModule {
 
     private const val BASE_URL = "https://reqres.in/api/"
-
 
     @Provides
     @Singleton
@@ -51,9 +51,11 @@ object AppModule {
         return retrofit.create(LogInService::class.java)
     }
 
+    @Provides
+    @Singleton
+    fun provideRegistrationService(retrofit: Retrofit): RegistrationService {
+        return retrofit.create(RegistrationService::class.java)
+    }
 
-//    val apiService: ApiService by lazy {
-//        retrofit.create(ApiService::class.java)
-//    }
 
 }
