@@ -1,6 +1,5 @@
-package com.example.apiloginreg.presentation.registration
+package com.example.apiloginreg.presentation.auth.registration
 
-import android.util.Log
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.widget.doAfterTextChanged
@@ -10,8 +9,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.example.apiloginreg.R
-import com.example.apiloginreg.data_store.AuthResult
+import com.example.apiloginreg.data.registration.RegistrationDTO
 import com.example.apiloginreg.databinding.FragmentRegBinding
+import com.example.apiloginreg.presentation.auth.AuthResult
 import com.example.apiloginreg.presentation.base.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -21,7 +21,6 @@ import kotlinx.coroutines.launch
 class RegFragment : BaseFragment<FragmentRegBinding>(FragmentRegBinding::inflate) {
 
     private val regViewModel: RegistrationViewModel by viewModels()
-
     private var currentPass: Boolean = false
 
     override fun start() {
@@ -35,7 +34,14 @@ class RegFragment : BaseFragment<FragmentRegBinding>(FragmentRegBinding::inflate
 
             btnReg.setOnClickListener {
                 if (currentPass) {
-                    regViewModel.registerUser(edEmail.text.toString(), edPass.text.toString())
+                    regViewModel.regEvent(
+                        RegistrationViewModel.RegEvent.Registration(
+                            RegistrationDTO(
+                                email = binding.edEmail.text.toString(),
+                                password = binding.edPass.text.toString()
+                            )
+                        )
+                    )
                 } else {
                     Toast.makeText(requireContext(), "check pass", Toast.LENGTH_SHORT).show()
                 }
@@ -47,7 +53,6 @@ class RegFragment : BaseFragment<FragmentRegBinding>(FragmentRegBinding::inflate
                 )
             }
         }
-
     }
 
     private fun checkPass() = with(binding) {
@@ -78,7 +83,6 @@ class RegFragment : BaseFragment<FragmentRegBinding>(FragmentRegBinding::inflate
                             is AuthResult.Error -> {
                                 // Error message
                                 val errorMessage = result.errorMessage
-                                Log.e("errorLoginError", "$errorMessage")
                                 Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT)
                                     .show()
                             }

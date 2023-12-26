@@ -57,8 +57,10 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
     implementation("com.squareup.moshi:moshi-kotlin:1.12.0")
+
     implementation("androidx.navigation:navigation-fragment-ktx:2.7.6")
     implementation("androidx.navigation:navigation-ui-ktx:2.7.6")
+
     implementation ("com.squareup.okhttp3:okhttp:4.9.1")
     implementation ("com.squareup.okhttp3:logging-interceptor:4.9.1")
     implementation ("androidx.security:security-crypto:1.1.0-alpha06")

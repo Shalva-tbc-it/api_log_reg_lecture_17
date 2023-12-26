@@ -1,4 +1,4 @@
-package com.example.apiloginreg.presentation.log_in
+package com.example.apiloginreg.presentation.auth.log_in
 
 import android.text.TextUtils
 import android.util.Patterns
@@ -8,10 +8,11 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
-import com.example.apiloginreg.data_store.AuthResult
+import com.example.apiloginreg.data.log_in.LogInDTO
 import com.example.apiloginreg.databinding.FragmentLoginBinding
+import com.example.apiloginreg.presentation.auth.AuthResult
 import com.example.apiloginreg.presentation.base.BaseFragment
-import com.example.apiloginreg.token.TokenManager
+import com.example.apiloginreg.presentation.splash_screen.TokenViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -20,6 +21,7 @@ import kotlinx.coroutines.launch
 class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::inflate) {
 
     private val logInViewModel: LogInViewModel by viewModels()
+    private val tokenViewModel: TokenViewModel by viewModels()
 
     override fun start() {
         observe()
@@ -29,7 +31,17 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
         binding.apply {
             btnLogin.setOnClickListener {
                 if (isValidEmail(edEmail.text.toString())) {
-                    logInViewModel.loginUser(edEmail.text.toString(), edPass.text.toString())
+                    viewLifecycleOwner.lifecycleScope.launch {
+                        logInViewModel.loginEvent(
+                            LogInViewModel.LoginEvent.Login(
+                                LogInDTO(
+                                    edEmail.text.toString(),
+                                    edPass.text.toString()
+                                )
+                            )
+                        )
+                    }
+
                 } else {
                     Toast.makeText(requireContext(), "wrong email", Toast.LENGTH_SHORT).show()
                 }
@@ -42,7 +54,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
             }
             viewLifecycleOwner.lifecycleScope.launch {
                 repeatOnLifecycle(Lifecycle.State.STARTED) {
-                    TokenManager(requireContext()).getToken.collect {
+                    tokenViewModel.observeToken().collect {
                         if (!it.isNullOrEmpty()) {
                             findNavController().navigate(
                                 LoginFragmentDirections.actionLoginFragmentToHomeFragment()
@@ -74,13 +86,15 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
                                 val token = result.token
                                 if (binding.checkbox.isChecked) {
                                     viewLifecycleOwner.lifecycleScope.launch {
-                                        TokenManager(requireContext()).saveToken(token)
+//                                        TokenManager(requireContext()).saveToken(token)
+                                        tokenViewModel.saveToken(token = token)
                                     }
                                 }
                                 findNavController().navigate(
                                     LoginFragmentDirections.actionLoginFragmentToHomeFragment()
                                 )
                             }
+
                             is AuthResult.Error -> {
                                 // Error message
                                 val errorMessage = result.errorMessage

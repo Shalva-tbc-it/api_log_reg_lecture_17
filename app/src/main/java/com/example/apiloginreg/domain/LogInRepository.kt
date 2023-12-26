@@ -1,6 +1,6 @@
 package com.example.apiloginreg.domain
 
-import com.example.apiloginreg.data_store.AuthResult
+import com.example.apiloginreg.presentation.auth.AuthResult
 import kotlinx.coroutines.flow.Flow
 
 interface LogInRepository {
